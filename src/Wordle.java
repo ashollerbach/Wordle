@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Wordle implements WordleGame {
 
-    //Letter object used to determine correctness for user interface
+    // Letter object used to determine correctness for user interface
     public class Letter {
         char letter;
         // -1 for black, 0 for yellow, 1 for green
@@ -19,19 +19,19 @@ public class Wordle implements WordleGame {
         }
     }
 
-    List<String> lexicon;    //list of possible words
-    List<Letter> listOfLetters = new ArrayList<Letter>(); //list of letters used to display correctness
+    List<String> lexicon; // list of possible words
+    List<Letter> listOfLetters = new ArrayList<Letter>(); // list of letters used to display correctness
     List<Character> userIn = new ArrayList<Character>(); // the guess the user inputs
     List<Character> answer = new ArrayList<Character>(); // TODO
-    String ans; // correct answer 
+    String ans; // correct answer
 
     List<String> validWords = new ArrayList<String>(); // list of all reasonable guesses
 
-
-    //wordle object that contains the lexicon
+    // wordle object that contains the lexicon
     public Wordle(InputStream in) {
         try {
             lexicon = new ArrayList<String>();
+            @SuppressWarnings("resource")
             Scanner s = new Scanner(new BufferedReader(new InputStreamReader(in)));
             while (s.hasNext()) {
                 String str = s.next();
@@ -45,11 +45,10 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //returns lexicon size
+    // returns lexicon size
     public int getLexiconSize() {
         return lexicon.size();
     }
-
 
     // method used to set the user input and removes the word already guessed
     public void setUserIn(String in) {
@@ -65,7 +64,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //converts a list of characters into a string to be displayed to the user
+    // converts a list of characters into a string to be displayed to the user
     public String toString(List<Character> in) {
         String out = "";
         for (char charIn : in) {
@@ -74,7 +73,7 @@ public class Wordle implements WordleGame {
         return out;
     }
 
-    //sets the correct answer
+    // sets the correct answer
     public void setAnswer(String in) {
         if (isValidWord(in)) {
             ans = in;
@@ -102,7 +101,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //removes all words with the given letter if it is not in the wordle
+    // removes all words with the given letter if it is not in the wordle
     public void removeBlackWords() {
         for (Letter e : listOfLetters) {
             if (e.color == -1) {
@@ -116,7 +115,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //removes all words with a letter in the same spot as the yellow letter
+    // removes all words with a letter in the same spot as the yellow letter
     public void removeYellowWords() {
         for (Letter e : listOfLetters) {
             if (e.color == 0) {
@@ -133,7 +132,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //removes words with a letter in the wrong spot
+    // removes words with a letter in the wrong spot
     public void removeGreenWords() {
         for (int i = 0; i < 5; i++) {
             if (listOfLetters.get(i).color == 1) {
@@ -147,7 +146,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //compares the guess to the answer
+    // compares the guess to the answer
     public void evalueateWordle() {
         while (!listOfLetters.isEmpty()) {
             listOfLetters.remove(0);
@@ -165,7 +164,7 @@ public class Wordle implements WordleGame {
         }
     }
 
-    //sees if a word has a certain character
+    // sees if a word has a certain character
     public boolean contains(String word, char in) {
         for (int i = 0; i < word.length(); i++) {
             if (word.charAt(i) == in) {
@@ -175,7 +174,7 @@ public class Wordle implements WordleGame {
         return false;
     }
 
-    //removes all invalid words
+    // removes all invalid words
     public void updateLexicon() {
         removeBlackWords();
         removeGreenWords();
@@ -199,9 +198,10 @@ public class Wordle implements WordleGame {
             alphabet.add(new Letter(alphabetAdd, 0));
         }
 
-        // goes through each word in the possilbe answers and finds the frequency of
+        // goes through each word in the possible answers and finds the frequency of
         // each character
         for (String word : lexicon) {
+            // evaluates each letter in the alphabet
             for (char a : word.toCharArray()) {
                 alphabet.get(a - 97).color++;
             }
@@ -243,12 +243,14 @@ public class Wordle implements WordleGame {
 
     //
     public void manualEntry() {
+        String in = "";
         while (!listOfLetters.isEmpty()) {
             listOfLetters.remove(0);
         }
+        @SuppressWarnings("resource")
         Scanner scan = new Scanner(System.in);
         System.out.print("Enter the word: ");
-        String in = scan.nextLine();
+        in = scan.nextLine();
         setUserIn(in);
         for (int i = 0; i < 5; i++) {
             System.out.print("Enter the color of the letter in position "
@@ -256,7 +258,6 @@ public class Wordle implements WordleGame {
             int c = scan.nextInt();
             listOfLetters.add(new Letter(userIn.get(i), c));
         }
-        scan.close();
     }
 
     public boolean isCorrect() {
@@ -303,10 +304,10 @@ public class Wordle implements WordleGame {
         return bestWord;
     }
 
-    //creates a list of valid guesses
+    // creates a list of valid guesses
     public void createValidWordList() {
         Scanner sc = new Scanner("validWords.txt");
-        while(sc.hasNextLine()){
+        while (sc.hasNextLine()) {
             validWords.add(sc.nextLine());
         }
         sc.close();
