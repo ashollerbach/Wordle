@@ -11,7 +11,7 @@ public class MonteCarlo {
         List<Integer> attemptsList = new ArrayList<Integer>();
         List<String> failedWords = new ArrayList<String>();
         int[] spread = new int[7]; // distribution of the attempts
-        int repeats = 100;
+        int repeats = 1000;
         for (int i = 0; i < repeats; i++) {
             Wordle wordle = new Wordle(new FileInputStream(new File("wordlist.txt")));
             wordle.createValidWordList();
@@ -25,11 +25,7 @@ public class MonteCarlo {
                 wordle.setUserIn(bestWord);
                 wordle.evalueateWordle();
                 wordle.updateLexicon();
-                if(wordle.getLexiconSize() > .01 * wordle.validWords.size()){
-                    bestWord = wordle.findBestWord();
-                } else {
-                    bestWord = wordle.findBestWord2();
-                }
+                bestWord = wordle.findBestWord();
                 if(attempts == 6){
                     failedWords.add(wordle.getAnswer());
                 }
